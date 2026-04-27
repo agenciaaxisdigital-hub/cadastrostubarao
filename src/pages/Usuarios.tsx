@@ -48,22 +48,10 @@ const Usuarios = () => {
     },
   });
 
-  const { data: userAssociados } = useQuery({
-    queryKey: ["user_associados", viewUser?.id],
-    queryFn: async () => {
-      if (!viewUser) return [];
-      const { data, error } = await supabase
-        .from("sindspag_associados")
-        .select("id, nome, telefone, municipio, uf, status, eh_socio_atual, criado_em")
-        .eq("criado_por", viewUser.id)
-        .order("nome");
-      if (error) throw error;
-      return data ?? [];
-    },
-    enabled: !!viewUser,
-  });
+  // Listagem de cadastros por usuário será reimplementada para Tubarão Social/Time
+  const userAssociados: any[] = [];
 
-  if (user?.cargo !== "admin") return <Navigate to="/associados" replace />;
+  if (user?.cargo !== "admin") return <Navigate to="/social" replace />;
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -360,7 +348,7 @@ const Usuarios = () => {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => { setViewUser(null); navigate(`/associado/${a.id}`); }}
+                            onClick={() => { setViewUser(null); }}
                             className="rounded-xl hover:bg-primary/10 hover:text-primary h-8 w-8 shrink-0"
                             title="Editar"
                           >
