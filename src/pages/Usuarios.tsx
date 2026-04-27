@@ -75,7 +75,7 @@ const Usuarios = () => {
       return;
     }
     setLoading(true);
-    const { data, error } = await supabase.rpc("sindspag_criar_usuario", {
+    const { data, error } = await supabase.rpc("tubarao_criar_usuario", {
       p_nome: trimmedNome,
       p_senha: trimmedSenha,
       p_cargo: cargo,

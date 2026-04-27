@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Crown, Heart, Trophy, Search, Share2, Eye, FileDown } from "lucide-react";
+import { Crown, Heart, Trophy, Search, Share2, Eye, FileDown, Users } from "lucide-react";
 import { copyPublicLink } from "@/lib/shareLink";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
