@@ -51,14 +51,14 @@ const PublicCadastro = ({ tipo }: Props) => {
       setCarregandoLider(false);
       return;
     }
-    (supabase.rpc as any)("tubarao_get_lider_publico", { p_user_id: liderId }).then(
+    (supabase.rpc as any)("tubarao_info_lider", { p_user_id: liderId }).then(
       ({ data, error }: any) => {
         setCarregandoLider(false);
         if (error || !data || data.length === 0) {
           setLiderInvalido(true);
         } else {
-          setLiderNome(data[0].nome);
-          setLiderCargo(data[0].cargo);
+          setLiderNome(data[0].v_nome);
+          setLiderCargo(data[0].v_cargo);
         }
       }
     );
