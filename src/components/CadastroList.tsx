@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { copyPublicLink } from "@/lib/shareLink";
+import { maskCPF, maskPhone } from "@/lib/cadastroFields";
 
 export type CadastroBase = {
   id: string;
@@ -17,7 +18,6 @@ export type CadastroBase = {
   cpf: string | null;
   telefone: string | null;
   instagram: string | null;
-  email: string | null;
   titulo_eleitor: string | null;
   zona: string | null;
   secao: string | null;
@@ -76,8 +76,7 @@ const CadastroList = ({ table, title, subtitle, basePath }: Props) => {
       (a) =>
         !s ||
         a.nome?.toLowerCase().includes(s) ||
-        a.telefone?.toLowerCase().includes(s) ||
-        a.email?.toLowerCase().includes(s)
+        a.telefone?.toLowerCase().includes(s)
     );
   }, [items, search]);
 
@@ -136,7 +135,7 @@ const CadastroList = ({ table, title, subtitle, basePath }: Props) => {
       <div className="relative">
         <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Buscar nome, telefone ou e-mail..."
+          placeholder="Buscar nome ou telefone..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="pl-10 h-11 rounded-xl bg-card shadow-card border-0"
@@ -168,8 +167,7 @@ const CadastroList = ({ table, title, subtitle, basePath }: Props) => {
                 <div className="min-w-0 flex-1">
                   <p className="font-bold text-sm sm:text-base text-foreground truncate">{a.nome}</p>
                   <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                    {a.telefone || "Sem telefone"}
-                    {a.email ? ` · ${a.email}` : ""}
+                    {a.telefone ? maskPhone(a.telefone) : "Sem telefone"}
                   </p>
                   <p className="text-[10px] text-muted-foreground mt-1">
                     Cadastrado em {formatDate(a.criado_em)}
@@ -213,10 +211,9 @@ const CadastroList = ({ table, title, subtitle, basePath }: Props) => {
                 <p className="text-white/70 text-sm mt-1">{title}</p>
               </div>
               <div className="flex-1 p-4 space-y-3">
-                <DetailRow label="CPF" value={viewItem.cpf} />
-                <DetailRow label="WhatsApp" value={viewItem.telefone} />
+                <DetailRow label="CPF" value={viewItem.cpf} mask={maskCPF} />
+                <DetailRow label="WhatsApp" value={viewItem.telefone} mask={maskPhone} />
                 <DetailRow label="Instagram" value={viewItem.instagram} />
-                <DetailRow label="E-mail" value={viewItem.email} />
                 <DetailRow label="Título de eleitor" value={viewItem.titulo_eleitor} />
                 <div className="grid grid-cols-2 gap-3">
                   <DetailRow label="Zona" value={viewItem.zona} />
@@ -247,10 +244,12 @@ const CadastroList = ({ table, title, subtitle, basePath }: Props) => {
   );
 };
 
-const DetailRow = ({ label, value }: { label: string; value: string | null }) => (
+const DetailRow = ({ label, value, mask }: { label: string; value: string | null; mask?: (v: string) => string }) => (
   <div className="py-2 border-b last:border-0">
     <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
-    <p className="text-sm text-foreground font-medium mt-0.5 whitespace-pre-wrap">{value || "—"}</p>
+    <p className="text-sm text-foreground font-medium mt-0.5 whitespace-pre-wrap">
+      {value ? (mask ? mask(value) : value) : "—"}
+    </p>
   </div>
 );
 

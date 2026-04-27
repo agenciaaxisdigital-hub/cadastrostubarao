@@ -83,7 +83,11 @@ const Usuarios = () => {
     setLoading(false);
     const result = data as any;
     if (error || !result?.success) {
-      toast.error(result?.message || "Erro ao criar usuário");
+      if (error?.message?.includes("gen_salt") || result?.message?.includes("gen_salt")) {
+        toast.error("Erro no banco: Ative a extensão 'pgcrypto' no painel do Supabase (Database > Extensions) para permitir a criação de usuários.");
+      } else {
+        toast.error(result?.message || error?.message || "Erro ao criar usuário");
+      }
     } else {
       toast.success("Usuário criado!");
       setNome("");

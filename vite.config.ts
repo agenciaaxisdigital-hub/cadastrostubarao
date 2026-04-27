@@ -20,24 +20,24 @@ export default defineConfig(({ mode }) => ({
       devOptions: {
         enabled: false,
       },
-      includeAssets: ["icons/icon-192.png", "icons/icon-512.png"],
+      includeAssets: ["logo.png", "favicon.png"],
       manifest: {
-        name: "SINDSPAG - Sistema de Gestão",
-        short_name: "SINDSPAG",
-        description: "Sistema de Gestão de Associados do SINDSPAG",
+        name: "Tubarão Cadastros - Gestão",
+        short_name: "Tubarão",
+        description: "Sistema de Gestão e Inteligência - Tubarão",
         start_url: "/",
         display: "standalone",
-        background_color: "#ffffff",
-        theme_color: "#DC2626",
+        background_color: "#0a192f",
+        theme_color: "#0a192f",
         orientation: "portrait-primary",
         icons: [
           {
-            src: "/icons/icon-192.png",
-            sizes: "192x192",
+            src: "/logo.png",
+            sizes: "512x512",
             type: "image/png",
           },
           {
-            src: "/icons/icon-512.png",
+            src: "/logo.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any maskable",

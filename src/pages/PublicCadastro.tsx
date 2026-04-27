@@ -94,6 +94,15 @@ const PublicCadastro = ({ tipo }: Props) => {
     }
   };
 
+  useEffect(() => {
+    if (sucesso) {
+      const timer = setTimeout(() => {
+        window.location.href = "https://www.instagram.com/drafernandasarelli/";
+      }, 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [sucesso]);
+
   if (carregandoLider) {
     return (
       <div className="min-h-[100dvh] flex items-center justify-center gradient-deep">
@@ -120,29 +129,67 @@ const PublicCadastro = ({ tipo }: Props) => {
 
   if (sucesso) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center gradient-deep p-4">
-        <Card className="max-w-md w-full shadow-elevated border-0">
-          <CardContent className="p-8 text-center space-y-3">
-            <CheckCircle2 className="h-14 w-14 mx-auto text-emerald-600" />
-            <h1 className="text-2xl font-extrabold text-foreground">Cadastro recebido!</h1>
-            <p className="text-sm text-muted-foreground">
-              Obrigado, <span className="font-semibold">{form.nome}</span>! Seu cadastro de{" "}
-              <span className="font-semibold">{meta.label}</span> foi enviado para{" "}
-              <span className="font-semibold">{liderNome}</span>.
-            </p>
-            <Button
-              onClick={() => {
-                setSucesso(false);
-                setSubmitted(false);
-                setForm(defaultCadastroForm);
-              }}
-              variant="outline"
-              className="rounded-xl mt-2"
-            >
-              Cadastrar outra pessoa
-            </Button>
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center p-4 bg-[#0a192f] relative overflow-hidden">
+        {/* Background Decorative Elements */}
+        <div className="absolute top-[-10%] right-[-10%] w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+        
+        <Card className="max-w-md w-full shadow-2xl border-0 overflow-hidden bg-white/95 backdrop-blur-sm relative z-10">
+          <div className="h-2 w-full bg-muted overflow-hidden">
+            <div className="h-full bg-emerald-500 animate-[progress_6s_linear_forwards]" style={{ width: '0%' }} />
+          </div>
+          
+          <CardContent className="p-8 text-center space-y-6">
+            <div className="relative">
+              <div className="h-20 w-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto ring-8 ring-emerald-50/50">
+                <CheckCircle2 className="h-12 w-12 text-emerald-600 animate-bounce" />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h1 className="text-3xl font-black text-[#0a192f] tracking-tight">
+                CONCLUÍDO!
+              </h1>
+              <p className="text-muted-foreground font-medium">
+                Seja bem-vindo(a), <span className="text-primary font-bold">{form.nome.split(' ')[0]}</span>!
+              </p>
+            </div>
+
+            <div className="p-5 bg-[#0a192f]/5 rounded-2xl border border-[#0a192f]/10 space-y-4">
+              <div className="space-y-1">
+                <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Importante</p>
+                <p className="text-sm font-bold text-[#0a192f]">
+                  Siga agora a Dra. Fernanda Sarelli no Instagram para validar seu acesso e acompanhar as novidades:
+                </p>
+              </div>
+
+              <Button 
+                onClick={() => window.location.href = "https://www.instagram.com/drafernandasarelli/"}
+                className="w-full h-12 rounded-xl bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:opacity-90 text-white font-bold gap-2 shadow-lg transition-all active:scale-95"
+              >
+                <ExternalLink className="h-4 w-4" /> @drafernandasarelli
+              </Button>
+            </div>
+
+            <div className="space-y-3 pt-2">
+              <p className="text-xs text-muted-foreground flex items-center justify-center gap-2">
+                <span className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-ping" />
+                Redirecionando automaticamente...
+              </p>
+            </div>
           </CardContent>
         </Card>
+        
+        <p className="mt-8 text-white/30 text-[10px] font-bold tracking-widest uppercase">
+          Tubarão Cadastros · Inteligência em Gestão
+        </p>
+
+        <style>{`
+          @keyframes progress {
+            from { width: 0%; }
+            to { width: 100%; }
+          }
+        `}</style>
       </div>
     );
   }
@@ -212,15 +259,6 @@ const PublicCadastro = ({ tipo }: Props) => {
                 onChange={(e) => set("instagram", maskInstagram(e.target.value))}
                 placeholder="@usuario"
                 className={inputCls("instagram")}
-              />
-            </Field>
-            <Field label="E-mail" error={submitted ? errors.email : undefined}>
-              <Input
-                type="email"
-                value={form.email}
-                onChange={(e) => set("email", e.target.value)}
-                placeholder="email@exemplo.com (opcional)"
-                className={inputCls("email")}
               />
             </Field>
           </CardContent>

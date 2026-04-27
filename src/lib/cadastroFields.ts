@@ -6,7 +6,6 @@ export interface CadastroFormData {
   cpf: string;
   telefone: string; // WhatsApp
   instagram: string;
-  email: string;
   titulo_eleitor: string;
   zona: string;
   secao: string;
@@ -21,7 +20,6 @@ export const defaultCadastroForm: CadastroFormData = {
   cpf: "",
   telefone: "",
   instagram: "",
-  email: "",
   titulo_eleitor: "",
   zona: "",
   secao: "",
@@ -68,7 +66,6 @@ export const validateCadastro = (form: CadastroFormData) => {
   if (!form.telefone.trim()) errs.telefone = "WhatsApp é obrigatório";
   if (!form.instagram.trim() || form.instagram === "@")
     errs.instagram = "Instagram é obrigatório";
-  if (form.email && !/^\S+@\S+\.\S+$/.test(form.email)) errs.email = "E-mail inválido";
   if (!form.titulo_eleitor.trim()) errs.titulo_eleitor = "Título de eleitor é obrigatório";
   if (!form.zona.trim()) errs.zona = "Zona é obrigatória";
   if (!form.secao.trim()) errs.secao = "Seção é obrigatória";
@@ -79,13 +76,12 @@ export const validateCadastro = (form: CadastroFormData) => {
 
 export const buildPayload = (form: CadastroFormData) => ({
   nome: form.nome.trim(),
-  cpf: form.cpf.trim() || null,
-  telefone: form.telefone.trim() || null,
+  cpf: form.cpf.replace(/\D/g, "") || null,
+  telefone: form.telefone.replace(/\D/g, "") || null,
   instagram: form.instagram.trim() || null,
-  email: form.email.trim() || null,
-  titulo_eleitor: form.titulo_eleitor.trim() || null,
-  zona: form.zona.trim() || null,
-  secao: form.secao.trim() || null,
+  titulo_eleitor: form.titulo_eleitor.replace(/\D/g, "") || null,
+  zona: form.zona.replace(/\D/g, "") || null,
+  secao: form.secao.replace(/\D/g, "") || null,
   municipio: form.municipio.trim() || null,
   uf: form.uf.trim().toUpperCase() || null,
   colegio_eleitoral: form.colegio_eleitoral.trim() || null,

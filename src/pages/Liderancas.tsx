@@ -7,8 +7,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Crown, Heart, Trophy, Search, Share2, Eye } from "lucide-react";
+import { Crown, Heart, Trophy, Search, Share2, Eye, FileDown } from "lucide-react";
 import { copyPublicLink } from "@/lib/shareLink";
+import { toast } from "sonner";
+import * as XLSX from "xlsx";
 
 type LiderRow = {
   id: string;
@@ -30,8 +32,62 @@ const Liderancas = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [viewLider, setViewLider] = useState<LiderRow | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   if (user?.cargo !== "admin") return <Navigate to="/social" replace />;
+
+  const handleExportAll = async () => {
+    setIsExporting(true);
+    try {
+      // Busca todos os dados necessários
+      const [socialData, timeData, usersData] = await Promise.all([
+        (supabase.from as any)("tubarao_social").select("*"),
+        (supabase.from as any)("tubarao_time").select("*"),
+        supabase.from("sindspag_usuarios").select("id, nome"),
+      ]);
+
+      if (socialData.error || timeData.error) throw new Error("Erro ao buscar dados");
+
+      const userMap = (usersData.data || []).reduce((acc: any, u: any) => {
+        acc[u.id] = u.nome;
+        return acc;
+      }, {});
+
+      const formatRow = (r: any) => ({
+        ...r,
+        criado_por_nome: userMap[r.criado_por] || "Desconhecido",
+        criado_em: r.criado_em ? new Date(r.criado_em).toLocaleString("pt-BR") : "",
+      });
+
+      const wb = XLSX.utils.book_new();
+      
+      // Aba Social
+      const wsSocial = XLSX.utils.json_to_sheet(socialData.data.map(formatRow));
+      XLSX.utils.book_append_sheet(wb, wsSocial, "Tubarão Social");
+
+      // Aba Time
+      const wsTime = XLSX.utils.json_to_sheet(timeData.data.map(formatRow));
+      XLSX.utils.book_append_sheet(wb, wsTime, "Tubarão Time");
+
+      // Aba Lideranças (Resumo)
+      const wsLideres = XLSX.utils.json_to_sheet(lideres.map(l => ({
+        Nome: l.nome,
+        Cargo: l.cargo,
+        Social: l.total_social,
+        Time: l.total_time,
+        Total: l.total_social + l.total_time
+      })));
+      XLSX.utils.book_append_sheet(wb, wsLideres, "Resumo Lideranças");
+
+      XLSX.writeFile(wb, `relatorio_geral_tubarao_${new Date().toISOString().split('T')[0]}.xlsx`);
+      toast.success("Relatório exportado com sucesso!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Falha ao exportar relatório");
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const { data: lideres = [], isLoading } = useQuery({
     queryKey: ["liderancas-com-totais"],
@@ -46,7 +102,6 @@ const Liderancas = () => {
       const ids = (usuarios ?? []).map((u) => u.id);
       if (!ids.length) return [];
 
-      // Busca contagens em paralelo
       const [socialCount, timeCount] = await Promise.all([
         (supabase.from as any)("tubarao_social")
           .select("criado_por", { count: "exact", head: false })
@@ -106,11 +161,21 @@ const Liderancas = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6 w-full min-w-0">
-      <div>
-        <h1 className="text-xl sm:text-2xl font-extrabold text-foreground">Lideranças</h1>
-        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-          {lideres.length} lideranças · {totalGeralSocial} Social · {totalGeralTime} Time
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight uppercase">Lideranças</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
+            Painel de Controle e Desempenho
+          </p>
+        </div>
+        <Button 
+          disabled={isExporting} 
+          onClick={handleExportAll}
+          className="rounded-xl gradient-primary border-0 shadow-elevated font-bold gap-2 text-xs sm:text-sm h-10 sm:h-11 px-4 sm:px-6 transition-all active:scale-95"
+        >
+          <FileDown className="h-4 w-4" />
+          {isExporting ? "Gerando..." : "Exportar Geral"}
+        </Button>
       </div>
 
       {/* Stats */}
@@ -177,57 +242,77 @@ const Liderancas = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
           {filtered.map((l) => (
-            <Card key={l.id} className="shadow-card border-0">
-              <CardContent className="p-3 sm:p-4">
-                <div className="flex items-center justify-between gap-3 flex-wrap">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-bold text-sm sm:text-base text-foreground truncate">{l.nome}</p>
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
-                        l.cargo === "admin" ? "bg-primary/10 text-primary" : "bg-accent/10 text-accent"
-                      }`}>
-                        {l.cargo === "admin" ? "Admin" : "Liderança"}
-                      </span>
+            <Card key={l.id} className="shadow-card border-0 hover:shadow-lg transition-shadow overflow-hidden group">
+              <CardContent className="p-0">
+                <div className="flex flex-col">
+                  <div className="p-4 flex items-center justify-between bg-muted/30">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary border border-primary/20">
+                        {l.nome.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <p className="font-bold text-sm sm:text-base text-foreground leading-tight">{l.nome}</p>
+                        <span className={`text-[9px] px-2 py-0.5 rounded-full font-black uppercase tracking-tighter mt-1 inline-block ${
+                          l.cargo === "admin" ? "bg-primary text-white shadow-sm" : "bg-accent/20 text-accent"
+                        }`}>
+                          {l.cargo === "admin" ? "Admin" : "Liderança"}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3 mt-1.5 text-xs">
-                      <span className="flex items-center gap-1 text-rose-600 font-semibold">
-                        <Heart className="h-3 w-3" /> {l.total_social} Social
-                      </span>
-                      <span className="flex items-center gap-1 text-amber-600 font-semibold">
-                        <Trophy className="h-3 w-3" /> {l.total_time} Time
-                      </span>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setViewLider(l)}
+                        className="rounded-xl h-9 w-9 bg-white shadow-sm hover:bg-primary/10 hover:text-primary transition-all"
+                        title="Ver detalhamento"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex gap-1 shrink-0">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => copyPublicLink("social", l.id, l.nome)}
-                      className="rounded-xl h-9 w-9 hover:bg-rose-500/10 hover:text-rose-600"
-                      title="Copiar link Social"
-                    >
-                      <Heart className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => copyPublicLink("time", l.id, l.nome)}
-                      className="rounded-xl h-9 w-9 hover:bg-amber-500/10 hover:text-amber-600"
-                      title="Copiar link Time"
-                    >
-                      <Trophy className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setViewLider(l)}
-                      className="rounded-xl h-9 w-9 hover:bg-primary/10 hover:text-primary"
-                      title="Ver cadastros"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
+                  
+                  <div className="p-4 grid grid-cols-2 gap-3 bg-white">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-1.5 text-rose-600">
+                        <Heart className="h-3 w-3 fill-rose-600/10" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider">Social</span>
+                      </div>
+                      <p className="text-xl font-black text-slate-800 leading-none">{l.total_social}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-1.5 text-amber-600">
+                        <Trophy className="h-3 w-3 fill-amber-600/10" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider">Time</span>
+                      </div>
+                      <p className="text-xl font-black text-slate-800 leading-none">{l.total_time}</p>
+                    </div>
+                  </div>
+
+                  <div className="px-4 py-3 bg-muted/10 border-t flex items-center justify-between">
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyPublicLink("social", l.id, l.nome)}
+                        className="rounded-lg h-8 text-[10px] font-bold gap-1.5 border-rose-200 text-rose-700 hover:bg-rose-50"
+                      >
+                        <Share2 className="h-3 w-3" /> Link Social
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyPublicLink("time", l.id, l.nome)}
+                        className="rounded-lg h-8 text-[10px] font-bold gap-1.5 border-amber-200 text-amber-700 hover:bg-amber-50"
+                      >
+                        <Share2 className="h-3 w-3" /> Link Time
+                      </Button>
+                    </div>
+                    <div className="text-[10px] font-black text-slate-400">
+                      TOTAL: {l.total_social + l.total_time}
+                    </div>
                   </div>
                 </div>
               </CardContent>

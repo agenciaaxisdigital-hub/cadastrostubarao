@@ -51,10 +51,9 @@ const CadastroForm = ({ table, title, basePath }: Props) => {
           if (data) {
             setForm({
               nome: data.nome || "",
-              cpf: data.cpf || "",
-              telefone: data.telefone || "",
+              cpf: data.cpf ? maskCPF(data.cpf) : "",
+              telefone: data.telefone ? maskPhone(data.telefone) : "",
               instagram: data.instagram || "",
-              email: data.email || "",
               titulo_eleitor: data.titulo_eleitor || "",
               zona: data.zona || "",
               secao: data.secao || "",
@@ -192,17 +191,6 @@ const CadastroForm = ({ table, title, basePath }: Props) => {
                 className={inputCls("instagram")}
               />
               <FieldError field="instagram" />
-            </div>
-            <div>
-              <Label className={labelCls}>E-mail</Label>
-              <Input
-                type="email"
-                value={form.email}
-                onChange={(e) => set("email", e.target.value)}
-                placeholder="email@exemplo.com"
-                className={inputCls("email")}
-              />
-              <FieldError field="email" />
             </div>
           </CardContent>
         </Card>
