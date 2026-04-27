@@ -50,20 +50,20 @@ const AppLayout = () => {
             <div className="flex items-center gap-1.5">
               <div className="hidden md:flex gap-1 mr-2">
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
                   onClick={() => copyPublicLink("social", user.id, user.nome)}
-                  className="rounded-xl h-9 text-[10px] font-bold gap-1.5 border-white/10 text-white hover:bg-white/10"
+                  className="rounded-xl h-9 text-[10px] font-black gap-1.5 bg-primary/20 text-white border border-primary/40 hover:bg-primary transition-all"
                 >
-                  <Share2 className="h-3.5 w-3.5" /> Link Social
+                  <Share2 className="h-3.5 w-3.5" /> LINK SOCIAL
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
                   onClick={() => copyPublicLink("time", user.id, user.nome)}
-                  className="rounded-xl h-9 text-[10px] font-bold gap-1.5 border-white/10 text-white hover:bg-white/10"
+                  className="rounded-xl h-9 text-[10px] font-black gap-1.5 bg-accent/20 text-white border border-accent/40 hover:bg-accent transition-all"
                 >
-                  <Share2 className="h-3.5 w-3.5" /> Link Time
+                  <Share2 className="h-3.5 w-3.5" /> LINK TIME
                 </Button>
               </div>
 

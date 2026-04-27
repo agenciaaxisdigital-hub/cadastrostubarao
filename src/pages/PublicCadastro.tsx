@@ -100,7 +100,7 @@ const PublicCadastro = ({ tipo }: Props) => {
     if (sucesso) {
       const timer = setTimeout(() => {
         window.location.href = "https://www.instagram.com/drafernandasarelli/";
-      }, 6000);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [sucesso]);
@@ -138,7 +138,7 @@ const PublicCadastro = ({ tipo }: Props) => {
         
         <Card className="max-w-md w-full shadow-2xl border-0 overflow-hidden bg-white/95 backdrop-blur-sm relative z-10">
           <div className="h-2 w-full bg-muted overflow-hidden">
-            <div className="h-full bg-emerald-500 animate-[progress_6s_linear_forwards]" style={{ width: '0%' }} />
+            <div className="h-full bg-emerald-500 animate-[progress_3s_linear_forwards]" style={{ width: '0%' }} />
           </div>
           
           <CardContent className="p-8 text-center space-y-6">
