@@ -8,8 +8,10 @@ import TubaraoSocial from "./pages/TubaraoSocial";
 import TubaraoSocialForm from "./pages/TubaraoSocialForm";
 import TubaraoTime from "./pages/TubaraoTime";
 import TubaraoTimeForm from "./pages/TubaraoTimeForm";
+import Liderancas from "./pages/Liderancas";
 import Usuarios from "./pages/Usuarios";
 import AppLayout from "./components/AppLayout";
+import PublicCadastro from "./pages/PublicCadastro";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,11 +24,15 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Login />} />
+            {/* Rotas públicas de auto-cadastro via link */}
+            <Route path="/c/social/:liderId" element={<PublicCadastro tipo="social" />} />
+            <Route path="/c/time/:liderId" element={<PublicCadastro tipo="time" />} />
             <Route element={<AppLayout />}>
               <Route path="/social" element={<TubaraoSocial />} />
               <Route path="/social/:id" element={<TubaraoSocialForm />} />
               <Route path="/time" element={<TubaraoTime />} />
               <Route path="/time/:id" element={<TubaraoTimeForm />} />
+              <Route path="/liderancas" element={<Liderancas />} />
               <Route path="/usuarios" element={<Usuarios />} />
               {/* Legacy redirects */}
               <Route path="/cadastro" element={<Navigate to="/social/novo" replace />} />

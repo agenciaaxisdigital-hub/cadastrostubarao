@@ -13,7 +13,12 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { toast } from "sonner";
 import { UserPlus, Shield, Trash2, KeyRound, Edit, Eye, Users } from "lucide-react";
 
-const CARGO_OPTIONS = ["admin", "usuario"];
+const CARGO_OPTIONS = ["admin", "lideranca", "usuario"];
+const CARGO_LABEL: Record<string, string> = {
+  admin: "Administrador",
+  lideranca: "Liderança",
+  usuario: "Usuário",
+};
 
 const formatDate = (d: string | null) => {
   if (!d) return "—";
