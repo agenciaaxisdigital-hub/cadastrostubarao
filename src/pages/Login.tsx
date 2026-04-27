@@ -73,14 +73,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center bg-gradient-to-br from-[hsl(10,85%,48%)] via-[hsl(15,80%,42%)] to-[hsl(0,60%,30%)] p-4 relative overflow-hidden">
+    <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center gradient-deep p-4 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-48 sm:w-72 h-48 sm:h-72 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-white/5 rounded-full translate-x-1/3 translate-y-1/3" />
 
       <div className="w-full max-w-sm sm:max-w-md relative z-10">
         <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">SINDSPAG</h1>
-          <p className="text-white/70 text-xs sm:text-sm mt-1.5">Sistema de Gestão de Associados</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">TUBARÃO CADASTROS</h1>
+          <p className="text-white/70 text-xs sm:text-sm mt-1.5">Sistema de Gestão</p>
         </div>
 
         <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-8">
@@ -153,7 +153,7 @@ const Login = () => {
         </div>
 
         <a
-          href="https://wa.me/5562993885258?text=Oi%20Gustavo%2C%20estou%20precisando%20de%20suporte%20com%20o%20SINDSPAG"
+          href="https://wa.me/5562993885258?text=Oi%2C%20estou%20precisando%20de%20suporte%20com%20o%20Tubar%C3%A3o%20Cadastros"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 text-white/70 hover:text-white text-xs sm:text-sm mt-5 sm:mt-6 transition-colors"
@@ -163,7 +163,7 @@ const Login = () => {
         </a>
 
         <p className="text-white/40 text-[10px] sm:text-xs text-center mt-3 px-4">
-          Sindicato dos Servidores Públicos Municipais de Aparecida de Goiânia
+          Tubarão Cadastros · Sistema de Gestão
         </p>
       </div>
     </div>
