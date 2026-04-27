@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Search, Plus, Edit, Trash2, Users } from "lucide-react";
+import { Search, Plus, Edit, Trash2, Users, Share2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { copyPublicLink } from "@/lib/shareLink";
 
 export type CadastroBase = {
   id: string;
@@ -101,13 +102,26 @@ const CadastroList = ({ table, title, subtitle, basePath }: Props) => {
             {filtered.length} de {items.length} {subtitle}
           </p>
         </div>
-        <Button
-          onClick={() => navigate(`${basePath}/novo`)}
-          className="rounded-xl h-10 sm:h-11 px-3 sm:px-5 gradient-primary border-0 shadow-elevated font-bold text-xs sm:text-sm gap-1.5"
-        >
-          <Plus className="h-4 w-4" />
-          <span className="hidden sm:inline">Novo</span>
-        </Button>
+        <div className="flex gap-2">
+          {user?.id && (
+            <Button
+              variant="outline"
+              onClick={() => copyPublicLink(table === "tubarao_social" ? "social" : "time", user.id, user.nome)}
+              className="rounded-xl h-10 sm:h-11 px-3 shadow-card border-0 bg-card font-bold text-xs sm:text-sm gap-1.5"
+              title="Compartilhar link de cadastro"
+            >
+              <Share2 className="h-4 w-4" />
+              <span className="hidden sm:inline">Link</span>
+            </Button>
+          )}
+          <Button
+            onClick={() => navigate(`${basePath}/novo`)}
+            className="rounded-xl h-10 sm:h-11 px-3 sm:px-5 gradient-primary border-0 shadow-elevated font-bold text-xs sm:text-sm gap-1.5"
+          >
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">Novo</span>
+          </Button>
+        </div>
       </div>
 
       {/* Search */}
