@@ -18,6 +18,12 @@ type LiderRow = {
   cargo: string;
   total_social: number;
   total_time: number;
+  counts: {
+    jogador: number;
+    comissao_tecnica: number;
+    familia: number;
+    torcida: number;
+  };
 };
 
 type CadastroSimples = {
@@ -104,28 +110,53 @@ const Liderancas = () => {
 
       const [socialCount, timeCount] = await Promise.all([
         (supabase.from as any)("tubarao_social")
-          .select("criado_por", { count: "exact", head: false })
+          .select("criado_por, tipo")
           .in("criado_por", ids),
         (supabase.from as any)("tubarao_time")
-          .select("criado_por", { count: "exact", head: false })
+          .select("criado_por, tipo")
           .in("criado_por", ids),
       ]);
 
-      const socialBy: Record<string, number> = {};
-      (socialCount.data ?? []).forEach((r: any) => {
-        if (r.criado_por) socialBy[r.criado_por] = (socialBy[r.criado_por] || 0) + 1;
+      const stats: Record<string, any> = {};
+      ids.forEach(id => {
+        stats[id] = { 
+          social: 0, 
+          time: 0, 
+          jogador: 0, 
+          comissao_tecnica: 0, 
+          familia: 0, 
+          torcida: 0 
+        };
       });
-      const timeBy: Record<string, number> = {};
+
+      (socialCount.data ?? []).forEach((r: any) => {
+        if (!r.criado_por) return;
+        stats[r.criado_por].social++;
+        if (r.tipo && stats[r.criado_por][r.tipo] !== undefined) {
+          stats[r.criado_por][r.tipo]++;
+        }
+      });
+
       (timeCount.data ?? []).forEach((r: any) => {
-        if (r.criado_por) timeBy[r.criado_por] = (timeBy[r.criado_por] || 0) + 1;
+        if (!r.criado_por) return;
+        stats[r.criado_por].time++;
+        if (r.tipo && stats[r.criado_por][r.tipo] !== undefined) {
+          stats[r.criado_por][r.tipo]++;
+        }
       });
 
       return (usuarios ?? []).map<LiderRow>((u) => ({
         id: u.id,
         nome: u.nome,
         cargo: u.cargo,
-        total_social: socialBy[u.id] || 0,
-        total_time: timeBy[u.id] || 0,
+        total_social: stats[u.id].social,
+        total_time: stats[u.id].time,
+        counts: {
+          jogador: stats[u.id].jogador,
+          comissao_tecnica: stats[u.id].comissao_tecnica,
+          familia: stats[u.id].familia,
+          torcida: stats[u.id].torcida,
+        }
       }));
     },
   });
@@ -274,20 +305,34 @@ const Liderancas = () => {
                     </div>
                   </div>
                   
-                  <div className="p-4 grid grid-cols-2 gap-3 bg-white">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-1.5 text-rose-600">
-                        <Heart className="h-3 w-3 fill-rose-600/10" />
-                        <span className="text-[10px] font-bold uppercase tracking-wider">Social</span>
+                  <div className="p-4 grid grid-cols-2 gap-x-4 gap-y-3 bg-white">
+                    <div className="flex items-center justify-between border-b border-slate-50 pb-1.5">
+                      <div className="flex items-center gap-1.5 text-primary">
+                        <Trophy className="h-3 w-3" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider">Jogador</span>
                       </div>
-                      <p className="text-xl font-black text-slate-800 leading-none">{l.total_social}</p>
+                      <span className="text-sm font-black text-slate-800">{l.counts.jogador}</span>
                     </div>
-                    <div className="space-y-1">
+                    <div className="flex items-center justify-between border-b border-slate-50 pb-1.5">
+                      <div className="flex items-center gap-1.5 text-blue-600">
+                        <Users className="h-3 w-3" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider">Comissão</span>
+                      </div>
+                      <span className="text-sm font-black text-slate-800">{l.counts.comissao_tecnica}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-amber-600">
                         <Trophy className="h-3 w-3 fill-amber-600/10" />
-                        <span className="text-[10px] font-bold uppercase tracking-wider">Time</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider">Família</span>
                       </div>
-                      <p className="text-xl font-black text-slate-800 leading-none">{l.total_time}</p>
+                      <span className="text-sm font-black text-slate-800">{l.counts.familia}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-rose-600">
+                        <Heart className="h-3 w-3 fill-rose-600/10" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider">Torcida</span>
+                      </div>
+                      <span className="text-sm font-black text-slate-800">{l.counts.torcida}</span>
                     </div>
                   </div>
 

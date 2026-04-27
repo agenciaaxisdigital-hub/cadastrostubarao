@@ -70,17 +70,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center relative overflow-hidden bg-[#020817]">
-      {/* Premium Background Elements */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/10 rounded-full blur-[150px] animate-pulse" />
-        <div 
-          className="absolute inset-0 opacity-40 bg-cover bg-center mix-blend-overlay"
-          style={{ backgroundImage: 'url("/login_background.png")' }}
-        />
-      </div>
-
+    <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center relative overflow-hidden bg-slate-950">
       <div className="w-full max-w-md px-4 relative z-10 animate-in fade-in zoom-in duration-500">
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/30 mb-4">

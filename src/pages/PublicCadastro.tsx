@@ -203,17 +203,7 @@ const PublicCadastro = ({ tipo }: Props) => {
     }`;
 
   return (
-    <div className="min-h-[100dvh] relative overflow-hidden bg-[#020817] font-sans">
-      {/* Premium Background Elements */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-[-5%] left-[-5%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[-5%] right-[-5%] w-[40%] h-[40%] bg-accent/10 rounded-full blur-[100px]" />
-        <div 
-          className="absolute inset-0 opacity-20 bg-cover bg-center mix-blend-overlay"
-          style={{ backgroundImage: 'url("/login_background.png")' }}
-        />
-      </div>
-
+    <div className="min-h-[100dvh] relative overflow-hidden bg-slate-950 font-sans">
       <header className="px-4 pt-12 pb-10 text-center relative z-10 animate-in fade-in slide-in-from-top-4 duration-700">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/20 mb-6 mx-auto">
           <Waves className="h-7 w-7 text-white" />
