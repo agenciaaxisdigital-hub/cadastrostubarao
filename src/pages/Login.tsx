@@ -30,7 +30,7 @@ const Login = () => {
     }
   }, []);
 
-  if (!isLoading && user) return <Navigate to="/associados" replace />;
+  if (!isLoading && user) return <Navigate to="/social" replace />;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,11 +55,11 @@ const Login = () => {
       const result = await login(trimmedNome, trimmedSenha);
       if (result.success) {
         // Use both navigate and fallback to ensure redirect always works
-        navigate("/associados", { replace: true });
+        navigate("/social", { replace: true });
         // Fallback: if navigate didn't trigger re-render, force it
         setTimeout(() => {
           if (window.location.pathname === "/") {
-            window.location.href = "/associados";
+            window.location.href = "/social";
           }
         }, 300);
       } else {
