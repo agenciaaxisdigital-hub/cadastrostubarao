@@ -1,7 +1,8 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Heart, Trophy, LogOut, Settings, Crown, MessageCircle, Users, LayoutDashboard, Waves } from "lucide-react";
+import { Heart, Trophy, LogOut, Settings, Crown, MessageCircle, Users, LayoutDashboard, Waves, Share2 } from "lucide-react";
+import { copyPublicLink } from "@/lib/shareLink";
 import SplashScreen from "./SplashScreen";
 
 const AppLayout = () => {
@@ -47,6 +48,25 @@ const AppLayout = () => {
             </div>
             
             <div className="flex items-center gap-1.5">
+              <div className="hidden md:flex gap-1 mr-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyPublicLink("social", user.id, user.nome)}
+                  className="rounded-xl h-9 text-[10px] font-bold gap-1.5 border-white/10 text-white hover:bg-white/10"
+                >
+                  <Share2 className="h-3.5 w-3.5" /> Link Social
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyPublicLink("time", user.id, user.nome)}
+                  className="rounded-xl h-9 text-[10px] font-bold gap-1.5 border-white/10 text-white hover:bg-white/10"
+                >
+                  <Share2 className="h-3.5 w-3.5" /> Link Time
+                </Button>
+              </div>
+
               <a
                 href="https://wa.me/5562993885258?text=Oi%2C%20preciso%20de%20suporte%20no%20Tubar%C3%A3o%20Cadastros"
                 target="_blank"
