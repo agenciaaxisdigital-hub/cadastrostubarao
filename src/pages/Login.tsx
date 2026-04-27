@@ -76,9 +76,6 @@ const Login = () => {
           <h1 className="text-4xl font-black text-white tracking-tighter uppercase sm:text-5xl">
             Tubarão <span className="text-primary">Cadastros</span>
           </h1>
-          <p className="text-slate-500 text-[10px] font-black mt-3 tracking-[0.4em] uppercase">
-            Inteligência em Gestão de Dados
-          </p>
         </div>
 
         <div className="bg-slate-900/40 backdrop-blur-3xl rounded-[2.5rem] border border-white/5 shadow-2xl p-10">

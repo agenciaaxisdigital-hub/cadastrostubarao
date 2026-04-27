@@ -208,12 +208,9 @@ const PublicCadastro = ({ tipo }: Props) => {
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/20 mb-6 mx-auto">
           <Waves className="h-7 w-7 text-white" />
         </div>
-        <h1 className="text-3xl font-black text-white tracking-tighter uppercase sm:text-4xl mb-2">
+        <h1 className="text-3xl font-black text-white tracking-tighter uppercase sm:text-4xl mb-6">
           Tubarão <span className="text-primary-glow">Cadastros</span>
         </h1>
-        <p className="text-slate-400 text-[10px] font-black tracking-[0.3em] uppercase mb-6">
-          {meta.label}
-        </p>
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Indicação de</span>
           <span className="text-xs font-black text-white uppercase tracking-tight">{liderNome}</span>
@@ -408,8 +405,8 @@ const PublicCadastro = ({ tipo }: Props) => {
         </Card>
         </div>
 
-        <p className="text-center text-white/40 text-[10px] mt-4">
-          Tubarão Cadastros · Sistema de Gestão
+        <p className="text-center text-white/20 text-[9px] font-bold tracking-widest mt-8 uppercase">
+          Tubarão Cadastros
         </p>
       </div>
     </div>
