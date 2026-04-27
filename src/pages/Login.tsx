@@ -70,58 +70,58 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center relative overflow-hidden bg-slate-950">
-      <div className="w-full max-w-md px-4 relative z-10 animate-in fade-in zoom-in duration-500">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/30 mb-4">
-            <Waves className="h-8 w-8 text-white" />
-          </div>
-          <h1 className="text-3xl font-black text-white tracking-tighter uppercase sm:text-4xl">
-            Tubarão <span className="text-primary-glow">Cadastros</span>
+    <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center relative overflow-hidden bg-[#020617]">
+      <div className="w-full max-w-md px-6 relative z-10 animate-in fade-in zoom-in duration-700">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-black text-white tracking-tighter uppercase sm:text-5xl">
+            Tubarão <span className="text-primary">Cadastros</span>
           </h1>
-          <p className="text-slate-400 text-sm font-medium mt-2 tracking-wide">
-            INTELIGÊNCIA EM GESTÃO DE DADOS
+          <p className="text-slate-500 text-[10px] font-black mt-3 tracking-[0.4em] uppercase">
+            Inteligência em Gestão de Dados
           </p>
         </div>
 
-        <div className="bg-slate-900/40 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl p-8 sm:p-10">
-          <div className="mb-8">
-            <h2 className="text-xl font-bold text-white tracking-tight">Bem-vindo de volta</h2>
+        <div className="bg-slate-900/40 backdrop-blur-3xl rounded-[2.5rem] border border-white/5 shadow-2xl p-10">
+          <div className="mb-10 text-center">
+            <h2 className="text-xl font-bold text-white tracking-tight">Bem-vindo</h2>
             <p className="text-slate-400 text-sm mt-1">Acesse sua conta para continuar</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="nome" className="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">Usuário</Label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-primary">
-                  <User className="h-5 w-5 text-slate-500 transition-colors group-focus-within:text-primary" />
+              <Label htmlFor="nome" className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Usuário</Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
+                  <User className="h-5 w-5" />
                 </div>
                 <Input
                   id="nome"
+                  type="text"
+                  autoComplete="off"
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
                   placeholder="Seu nome de usuário"
-                  autoComplete="username"
-                  className="pl-12 h-14 bg-slate-800/50 border-slate-700 rounded-2xl text-white placeholder:text-slate-600 focus:border-primary focus:ring-primary/20 transition-all"
+                  className="h-14 pl-12 rounded-2xl border-0 bg-slate-800/50 text-white placeholder:text-slate-600 focus:bg-slate-800 focus:ring-2 focus:ring-primary/20 transition-all"
+                  required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="senha" className="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">Senha</Label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-500 transition-colors group-focus-within:text-primary" />
+              <Label htmlFor="senha" className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Senha</Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
+                  <Lock className="h-5 w-5" />
                 </div>
                 <Input
                   id="senha"
                   type="password"
+                  autoComplete="new-password"
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
                   placeholder="••••••••"
-                  autoComplete="current-password"
-                  className="pl-12 h-14 bg-slate-800/50 border-slate-700 rounded-2xl text-white placeholder:text-slate-600 focus:border-primary focus:ring-primary/20 transition-all"
+                  className="h-14 pl-12 rounded-2xl border-0 bg-slate-800/50 text-white placeholder:text-slate-600 focus:bg-slate-800 focus:ring-2 focus:ring-primary/20 transition-all"
+                  required
                 />
               </div>
             </div>
