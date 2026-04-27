@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Heart, Trophy, LogOut, Settings, Crown, MessageCircle, Users, LayoutDashboard } from "lucide-react";
+import { Heart, Trophy, LogOut, Settings, Crown, MessageCircle, Users, LayoutDashboard, Waves } from "lucide-react";
 import SplashScreen from "./SplashScreen";
 
 const AppLayout = () => {
@@ -11,7 +11,7 @@ const AppLayout = () => {
   if (isLoading) return <SplashScreen />;
   if (!user) return <Navigate to="/" replace />;
 
-  const isAdmin = user.cargo === "diretor";
+  const isAdmin = user.cargo === "diretor" || user.cargo === "admin";
   const navItems = [
     { to: "/social", label: "Social", icon: Heart, match: ["/social"] },
     { to: "/time", label: "Time", icon: Trophy, match: ["/time"] },

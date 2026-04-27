@@ -34,7 +34,7 @@ const Liderancas = () => {
   const [viewLider, setViewLider] = useState<LiderRow | null>(null);
   const [isExporting, setIsExporting] = useState(false);
 
-  if (user?.cargo !== "diretor") return <Navigate to="/social" replace />;
+  if (user?.cargo !== "diretor" && user?.cargo !== "admin") return <Navigate to="/social" replace />;
 
   const handleExportAll = async () => {
     setIsExporting(true);

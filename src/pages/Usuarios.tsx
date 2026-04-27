@@ -56,7 +56,7 @@ const Usuarios = () => {
   // Listagem de cadastros por usuário será reimplementada para Tubarão Social/Time
   const userAssociados: any[] = [];
 
-  if (user?.cargo !== "diretor") return <Navigate to="/social" replace />;
+  if (user?.cargo !== "diretor" && user?.cargo !== "admin") return <Navigate to="/social" replace />;
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
