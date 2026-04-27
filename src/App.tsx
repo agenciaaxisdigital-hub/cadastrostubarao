@@ -24,7 +24,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Login />} />
-            {/* Rotas públicas de auto-cadastro via link da liderança/admin */}
+            {/* Rotas públicas de auto-cadastro via link */}
             <Route path="/c/social/:liderId" element={<PublicCadastro tipo="social" />} />
             <Route path="/c/time/:liderId" element={<PublicCadastro tipo="time" />} />
             <Route element={<AppLayout />}>
@@ -33,9 +33,6 @@ const App = () => (
               <Route path="/time" element={<TubaraoTime />} />
               <Route path="/time/:id" element={<TubaraoTimeForm />} />
               <Route path="/liderancas" element={<Liderancas />} />
-              <Route path="/social/:id" element={<TubaraoSocialForm />} />
-              <Route path="/time" element={<TubaraoTime />} />
-              <Route path="/time/:id" element={<TubaraoTimeForm />} />
               <Route path="/usuarios" element={<Usuarios />} />
               {/* Legacy redirects */}
               <Route path="/cadastro" element={<Navigate to="/social/novo" replace />} />
