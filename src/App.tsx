@@ -4,8 +4,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import AssociadoForm from "./pages/AssociadoForm";
+import TubaraoSocial from "./pages/TubaraoSocial";
+import TubaraoSocialForm from "./pages/TubaraoSocialForm";
+import TubaraoTime from "./pages/TubaraoTime";
+import TubaraoTimeForm from "./pages/TubaraoTimeForm";
 import Usuarios from "./pages/Usuarios";
 import AppLayout from "./components/AppLayout";
 import NotFound from "./pages/NotFound";
@@ -21,11 +23,15 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Login />} />
             <Route element={<AppLayout />}>
-              <Route path="/cadastro" element={<AssociadoForm />} />
-              <Route path="/associados" element={<Dashboard />} />
-              <Route path="/associado/:id" element={<AssociadoForm />} />
+              <Route path="/social" element={<TubaraoSocial />} />
+              <Route path="/social/:id" element={<TubaraoSocialForm />} />
+              <Route path="/time" element={<TubaraoTime />} />
+              <Route path="/time/:id" element={<TubaraoTimeForm />} />
               <Route path="/usuarios" element={<Usuarios />} />
-              <Route path="/dashboard" element={<Navigate to="/associados" replace />} />
+              {/* Legacy redirects */}
+              <Route path="/cadastro" element={<Navigate to="/social/novo" replace />} />
+              <Route path="/associados" element={<Navigate to="/social" replace />} />
+              <Route path="/dashboard" element={<Navigate to="/social" replace />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
