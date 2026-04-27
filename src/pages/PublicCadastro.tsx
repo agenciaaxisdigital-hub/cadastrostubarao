@@ -7,32 +7,26 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Heart, Trophy, User, AlertCircle, CheckCircle2 } from "lucide-react";
-
-const maskPhone = (v: string) => {
-  const d = v.replace(/\D/g, "").slice(0, 11);
-  if (d.length <= 2) return d.length ? `(${d}` : "";
-  if (d.length <= 7) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
-  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
-};
+import { Heart, Trophy, User, Vote, AlertCircle, CheckCircle2, ExternalLink } from "lucide-react";
+import {
+  CadastroFormData,
+  defaultCadastroForm,
+  maskCPF,
+  maskPhone,
+  maskInstagram,
+  onlyDigits,
+  upperLetters,
+  validateCadastro,
+  buildPayload,
+} from "@/lib/cadastroFields";
 
 interface Props {
   tipo: "social" | "time";
 }
 
 const TIPO_META = {
-  social: {
-    label: "Tubarão Social",
-    table: "tubarao_social" as const,
-    icon: Heart,
-    accent: "text-rose-600",
-  },
-  time: {
-    label: "Tubarão Time",
-    table: "tubarao_time" as const,
-    icon: Trophy,
-    accent: "text-amber-600",
-  },
+  social: { label: "Tubarão Social", table: "tubarao_social" as const, icon: Heart },
+  time: { label: "Tubarão Time", table: "tubarao_time" as const, icon: Trophy },
 };
 
 const PublicCadastro = ({ tipo }: Props) => {
@@ -44,7 +38,7 @@ const PublicCadastro = ({ tipo }: Props) => {
   const [liderInvalido, setLiderInvalido] = useState(false);
   const [carregandoLider, setCarregandoLider] = useState(true);
 
-  const [form, setForm] = useState({ nome: "", telefone: "", email: "", observacoes: "" });
+  const [form, setForm] = useState<CadastroFormData>(defaultCadastroForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -68,7 +62,7 @@ const PublicCadastro = ({ tipo }: Props) => {
     );
   }, [liderId]);
 
-  const set = (key: keyof typeof form, value: string) => {
+  const set = (key: keyof CadastroFormData, value: string) => {
     setForm((f) => ({ ...f, [key]: value }));
     if (submitted) {
       setErrors((prev) => {
@@ -78,18 +72,10 @@ const PublicCadastro = ({ tipo }: Props) => {
     }
   };
 
-  const validate = () => {
-    const errs: Record<string, string> = {};
-    if (!form.nome.trim()) errs.nome = "Nome é obrigatório";
-    if (!form.telefone.trim()) errs.telefone = "Telefone é obrigatório";
-    if (form.email && !/^\S+@\S+\.\S+$/.test(form.email)) errs.email = "E-mail inválido";
-    return errs;
-  };
-
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
-    const errs = validate();
+    const errs = validateCadastro(form);
     setErrors(errs);
     if (Object.keys(errs).length > 0) {
       toast.error("Preencha os campos obrigatórios");
@@ -97,10 +83,7 @@ const PublicCadastro = ({ tipo }: Props) => {
     }
     setLoading(true);
     const { error } = await (supabase.from as any)(meta.table).insert({
-      nome: form.nome.trim(),
-      telefone: form.telefone.trim() || null,
-      email: form.email.trim() || null,
-      observacoes: form.observacoes.trim() || null,
+      ...buildPayload(form),
       criado_por: liderId,
     });
     setLoading(false);
@@ -151,7 +134,7 @@ const PublicCadastro = ({ tipo }: Props) => {
               onClick={() => {
                 setSucesso(false);
                 setSubmitted(false);
-                setForm({ nome: "", telefone: "", email: "", observacoes: "" });
+                setForm(defaultCadastroForm);
               }}
               variant="outline"
               className="rounded-xl mt-2"
@@ -163,6 +146,12 @@ const PublicCadastro = ({ tipo }: Props) => {
       </div>
     );
   }
+
+  const labelCls = "text-xs font-semibold uppercase tracking-wider text-muted-foreground";
+  const inputCls = (field: string) =>
+    `h-11 rounded-xl border-0 bg-muted/50 focus:bg-background ${
+      submitted && errors[field] ? "ring-2 ring-destructive/50 bg-destructive/5" : ""
+    }`;
 
   return (
     <div className="min-h-[100dvh] gradient-deep">
@@ -179,47 +168,137 @@ const PublicCadastro = ({ tipo }: Props) => {
       </header>
 
       <div className="px-4 pb-12">
+        <Card className="max-w-lg mx-auto shadow-elevated border-0 overflow-hidden mb-4">
+          <CardHeader className="pb-3 px-4 sm:px-6">
+            <CardTitle className="flex items-center gap-2.5 text-base">
+              <div className="h-9 w-9 rounded-lg gradient-primary flex items-center justify-center shrink-0">
+                <User className="h-4 w-4 text-white" />
+              </div>
+              <span className="font-bold text-foreground">DADOS PESSOAIS</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="px-4 sm:px-6 pb-5 space-y-3">
+            <Field label="Nome completo *" error={submitted ? errors.nome : undefined}>
+              <Input
+                value={form.nome}
+                onChange={(e) => set("nome", e.target.value)}
+                placeholder="Seu nome completo"
+                className={inputCls("nome")}
+              />
+            </Field>
+            <Field label="CPF *" error={submitted ? errors.cpf : undefined}>
+              <Input
+                value={form.cpf}
+                onChange={(e) => set("cpf", maskCPF(e.target.value))}
+                placeholder="000.000.000-00"
+                inputMode="numeric"
+                maxLength={14}
+                className={inputCls("cpf")}
+              />
+            </Field>
+            <Field label="WhatsApp *" error={submitted ? errors.telefone : undefined}>
+              <Input
+                value={form.telefone}
+                onChange={(e) => set("telefone", maskPhone(e.target.value))}
+                placeholder="(00) 00000-0000"
+                inputMode="tel"
+                maxLength={15}
+                className={inputCls("telefone")}
+              />
+            </Field>
+            <Field label="Instagram *" error={submitted ? errors.instagram : undefined}>
+              <Input
+                value={form.instagram}
+                onChange={(e) => set("instagram", maskInstagram(e.target.value))}
+                placeholder="@usuario"
+                className={inputCls("instagram")}
+              />
+            </Field>
+            <Field label="E-mail" error={submitted ? errors.email : undefined}>
+              <Input
+                type="email"
+                value={form.email}
+                onChange={(e) => set("email", e.target.value)}
+                placeholder="email@exemplo.com (opcional)"
+                className={inputCls("email")}
+              />
+            </Field>
+          </CardContent>
+        </Card>
+
         <Card className="max-w-lg mx-auto shadow-elevated border-0 overflow-hidden">
           <CardHeader className="pb-3 px-4 sm:px-6">
             <CardTitle className="flex items-center gap-2.5 text-base">
               <div className="h-9 w-9 rounded-lg gradient-primary flex items-center justify-center shrink-0">
-                <Icon className="h-4 w-4 text-white" />
+                <Vote className="h-4 w-4 text-white" />
               </div>
-              <div>
-                <p className="font-bold text-foreground leading-tight">Faça seu cadastro</p>
-                <p className="text-xs text-muted-foreground font-normal">
-                  Preencha os dados abaixo
-                </p>
-              </div>
+              <span className="font-bold text-foreground">DADOS ELEITORAIS</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="px-4 sm:px-6 pb-6">
             <form onSubmit={submit} className="space-y-3">
-              <Field label="Nome completo *" error={submitted ? errors.nome : undefined}>
+              <a
+                href="https://www.tse.jus.br/eleitor/autoatendimento-eleitoral"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full h-11 rounded-xl bg-primary/5 hover:bg-primary/10 text-primary text-sm font-semibold transition-colors"
+              >
+                <ExternalLink className="h-4 w-4" /> Consultar dados no TSE
+              </a>
+              <Field label="Título de eleitor *" error={submitted ? errors.titulo_eleitor : undefined}>
                 <Input
-                  value={form.nome}
-                  onChange={(e) => set("nome", e.target.value)}
-                  placeholder="Seu nome completo"
-                  className="h-11 rounded-xl border-0 bg-muted/50 focus:bg-background"
+                  value={form.titulo_eleitor}
+                  onChange={(e) => set("titulo_eleitor", onlyDigits(e.target.value, 13))}
+                  inputMode="numeric"
+                  className={inputCls("titulo_eleitor")}
                 />
               </Field>
-              <Field label="WhatsApp *" error={submitted ? errors.telefone : undefined}>
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="Zona *" error={submitted ? errors.zona : undefined}>
+                  <Input
+                    value={form.zona}
+                    onChange={(e) => set("zona", onlyDigits(e.target.value, 4))}
+                    inputMode="numeric"
+                    className={inputCls("zona")}
+                  />
+                </Field>
+                <Field label="Seção *" error={submitted ? errors.secao : undefined}>
+                  <Input
+                    value={form.secao}
+                    onChange={(e) => set("secao", onlyDigits(e.target.value, 4))}
+                    inputMode="numeric"
+                    className={inputCls("secao")}
+                  />
+                </Field>
+              </div>
+              <div className="grid grid-cols-[1fr_auto] gap-3">
+                <Field label="Município *" error={submitted ? errors.municipio : undefined}>
+                  <Input
+                    value={form.municipio}
+                    onChange={(e) => set("municipio", e.target.value)}
+                    className={inputCls("municipio")}
+                  />
+                </Field>
+                <div className="w-20">
+                  <Label className={labelCls}>UF</Label>
+                  <div className="mt-1.5">
+                    <Input
+                      value={form.uf}
+                      onChange={(e) => set("uf", upperLetters(e.target.value))}
+                      maxLength={2}
+                      className={`${inputCls("uf")} text-center font-bold uppercase`}
+                    />
+                  </div>
+                </div>
+              </div>
+              <Field
+                label="Colégio eleitoral *"
+                error={submitted ? errors.colegio_eleitoral : undefined}
+              >
                 <Input
-                  value={form.telefone}
-                  onChange={(e) => set("telefone", maskPhone(e.target.value))}
-                  placeholder="(00) 00000-0000"
-                  inputMode="tel"
-                  maxLength={15}
-                  className="h-11 rounded-xl border-0 bg-muted/50 focus:bg-background"
-                />
-              </Field>
-              <Field label="E-mail" error={submitted ? errors.email : undefined}>
-                <Input
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => set("email", e.target.value)}
-                  placeholder="email@exemplo.com (opcional)"
-                  className="h-11 rounded-xl border-0 bg-muted/50 focus:bg-background"
+                  value={form.colegio_eleitoral}
+                  onChange={(e) => set("colegio_eleitoral", e.target.value)}
+                  className={inputCls("colegio_eleitoral")}
                 />
               </Field>
               <Field label="Observações">
