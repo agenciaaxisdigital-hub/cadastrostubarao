@@ -172,7 +172,7 @@ const Login = () => {
           </a>
 
           <p className="text-slate-600 text-[10px] font-black uppercase tracking-[0.3em] text-center">
-            Tubarão Cadastros · Intelligence Hub
+            Tubarão Cadastros
           </p>
         </div>
       </div>

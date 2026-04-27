@@ -37,7 +37,6 @@ const AppLayout = () => {
               <span className="font-black text-white text-base sm:text-lg tracking-tighter leading-none uppercase">
                 Tubarão <span className="text-primary-glow">Cadastros</span>
               </span>
-              <span className="text-[10px] text-slate-400 font-bold tracking-widest uppercase mt-0.5">Intelligence Hub</span>
             </div>
           </div>
 
