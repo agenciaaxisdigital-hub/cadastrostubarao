@@ -14,8 +14,16 @@ import { copyPublicLink } from "@/lib/shareLink";
 export type CadastroBase = {
   id: string;
   nome: string;
+  cpf: string | null;
   telefone: string | null;
+  instagram: string | null;
   email: string | null;
+  titulo_eleitor: string | null;
+  zona: string | null;
+  secao: string | null;
+  municipio: string | null;
+  uf: string | null;
+  colegio_eleitoral: string | null;
   observacoes: string | null;
   criado_em: string;
   criado_por: string | null;
@@ -205,8 +213,20 @@ const CadastroList = ({ table, title, subtitle, basePath }: Props) => {
                 <p className="text-white/70 text-sm mt-1">{title}</p>
               </div>
               <div className="flex-1 p-4 space-y-3">
-                <DetailRow label="Telefone" value={viewItem.telefone} />
+                <DetailRow label="CPF" value={viewItem.cpf} />
+                <DetailRow label="WhatsApp" value={viewItem.telefone} />
+                <DetailRow label="Instagram" value={viewItem.instagram} />
                 <DetailRow label="E-mail" value={viewItem.email} />
+                <DetailRow label="Título de eleitor" value={viewItem.titulo_eleitor} />
+                <div className="grid grid-cols-2 gap-3">
+                  <DetailRow label="Zona" value={viewItem.zona} />
+                  <DetailRow label="Seção" value={viewItem.secao} />
+                </div>
+                <div className="grid grid-cols-[1fr_auto] gap-3">
+                  <DetailRow label="Município" value={viewItem.municipio} />
+                  <DetailRow label="UF" value={viewItem.uf} />
+                </div>
+                <DetailRow label="Colégio eleitoral" value={viewItem.colegio_eleitoral} />
                 <DetailRow label="Observações" value={viewItem.observacoes} />
                 <DetailRow label="Cadastrado em" value={formatDate(viewItem.criado_em)} />
                 <Button
