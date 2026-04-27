@@ -70,11 +70,12 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center relative overflow-hidden bg-[#020617]">
-      <div className="w-full max-w-md px-6 relative z-10 animate-in fade-in zoom-in duration-700">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-black text-white tracking-tighter uppercase sm:text-5xl">
-            Tubarão <span className="text-primary">Cadastros</span>
+    <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center relative overflow-hidden bg-[#020617] p-4">
+      <div className="w-full max-w-md relative z-10 animate-in fade-in zoom-in duration-700">
+        <div className="text-center mb-10 pt-4">
+          <h1 className="text-4xl font-black text-white tracking-tighter uppercase sm:text-5xl leading-[1.1] py-2">
+            Tubarão <br className="sm:hidden" />
+            <span className="text-primary">Cadastros</span>
           </h1>
         </div>
 

@@ -203,12 +203,12 @@ const PublicCadastro = ({ tipo }: Props) => {
     }`;
 
   return (
-    <div className="min-h-[100dvh] relative overflow-hidden bg-slate-950 font-sans">
-      <header className="px-4 pt-12 pb-10 text-center relative z-10 animate-in fade-in slide-in-from-top-4 duration-700">
+    <div className="min-h-[100dvh] relative overflow-hidden bg-slate-950 font-sans pb-10">
+      <header className="px-4 pt-16 pb-10 text-center relative z-10 animate-in fade-in slide-in-from-top-4 duration-700">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/20 mb-6 mx-auto">
           <Waves className="h-7 w-7 text-white" />
         </div>
-        <h1 className="text-3xl font-black text-white tracking-tighter uppercase sm:text-4xl mb-6">
+        <h1 className="text-3xl font-black text-white tracking-tighter uppercase sm:text-4xl mb-6 leading-tight">
           Tubarão <span className="text-primary-glow">Cadastros</span>
         </h1>
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
