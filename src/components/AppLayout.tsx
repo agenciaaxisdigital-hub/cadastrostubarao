@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Heart, Trophy, LogOut, Settings, Crown, MessageCircle } from "lucide-react";
+import { Heart, Trophy, LogOut, Settings, Crown, MessageCircle, Users, LayoutDashboard } from "lucide-react";
 import SplashScreen from "./SplashScreen";
 
 const AppLayout = () => {
@@ -11,68 +11,76 @@ const AppLayout = () => {
   if (isLoading) return <SplashScreen />;
   if (!user) return <Navigate to="/" replace />;
 
-  const isAdmin = user.cargo === "admin";
+  const isAdmin = user.cargo === "diretor";
   const navItems = [
     { to: "/social", label: "Social", icon: Heart, match: ["/social"] },
     { to: "/time", label: "Time", icon: Trophy, match: ["/time"] },
     ...(isAdmin
       ? [
-          { to: "/liderancas", label: "Lideranças", icon: Crown, match: ["/liderancas"] },
+          { to: "/liderancas", label: "Equipe", icon: Users, match: ["/liderancas"] },
           { to: "/usuarios", label: "Usuários", icon: Settings, match: ["/usuarios"] },
         ]
       : []),
   ];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Top header */}
-      <header className="gradient-deep shadow-elevated sticky top-0 z-40">
-        <div className="container mx-auto flex flex-wrap items-center justify-between gap-2 px-3 py-2 sm:px-4 sm:py-3">
-          <span className="font-extrabold text-white text-lg sm:text-xl tracking-tight shrink-0">
-            TUBARÃO CADASTROS
-          </span>
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+      {/* Premium Top Header */}
+      <header className="bg-slate-900 sticky top-0 z-40 border-b border-white/5 shadow-lg">
+        <div className="container mx-auto px-4 h-16 sm:h-20 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-primary/20">
+              <Trophy className="h-5 w-5 text-white" />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-black text-white text-base sm:text-lg tracking-tighter leading-none uppercase">
+                Tubarão <span className="text-primary-glow">Cadastros</span>
+              </span>
+              <span className="text-[10px] text-slate-400 font-bold tracking-widest uppercase mt-0.5">Intelligence Hub</span>
+            </div>
+          </div>
 
-          <div className="flex min-w-0 flex-1 items-center justify-end gap-2 flex-wrap">
-            <span className="order-3 basis-full min-w-0 text-white/70 text-xs sm:order-none sm:basis-auto sm:text-sm sm:mr-2">
-              <span className="block truncate text-white font-semibold sm:text-right">{user.nome}</span>
-            </span>
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="hidden sm:flex flex-col items-end mr-2">
+              <span className="text-sm font-bold text-white leading-none">{user.nome}</span>
+              <span className="text-[10px] text-primary-glow font-black uppercase tracking-tighter mt-1">{user.cargo}</span>
+            </div>
+            
+            <div className="flex items-center gap-1.5">
+              <a
+                href="https://wa.me/5562993885258?text=Oi%2C%20preciso%20de%20suporte%20no%20Tubar%C3%A3o%20Cadastros"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-slate-400 hover:text-white hover:bg-white/10 rounded-xl h-10 w-10 transition-all"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                </Button>
+              </a>
 
-            <a
-              href="https://wa.me/5562993885258?text=Oi%2C%20preciso%20de%20suporte%20com%20o%20Tubar%C3%A3o%20Cadastros"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="shrink-0"
-            >
               <Button
                 variant="ghost"
-                size="sm"
-                className="gap-1.5 text-white/80 hover:text-white hover:bg-white/15 rounded-xl h-9 px-3 whitespace-nowrap shrink-0"
+                size="icon"
+                onClick={logout}
+                className="text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl h-10 w-10 transition-all"
               >
-                <MessageCircle className="h-4 w-4 shrink-0" />
-                <span className="text-sm">Suporte</span>
+                <LogOut className="h-5 w-5" />
               </Button>
-            </a>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={logout}
-              className="gap-1.5 text-white/80 hover:text-white hover:bg-white/15 rounded-xl h-9 px-3 whitespace-nowrap shrink-0"
-            >
-              <LogOut className="h-4 w-4 shrink-0" />
-              <span className="text-sm">Sair</span>
-            </Button>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 w-full max-w-5xl mx-auto min-w-0 px-3 sm:px-4 md:px-6 pt-3 sm:pt-4 md:pt-6 pb-[calc(7rem+env(safe-area-inset-bottom,0px))] overflow-x-hidden">
+      <main className="flex-1 w-full max-w-5xl mx-auto px-4 py-6 sm:py-10 pb-32">
         <Outlet />
       </main>
 
-      {/* Bottom navigation bar */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-lg border-t shadow-[0_-2px_20px_rgba(0,0,0,0.06)] z-50 safe-area-bottom">
-        <div className="container mx-auto flex items-center justify-around h-16 sm:h-[4.25rem] px-2">
+      {/* Modern Bottom Navigation */}
+      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md bg-slate-900/90 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-2xl z-50 overflow-hidden px-2 py-2">
+        <div className="flex items-center justify-between">
           {navItems.map((item) => {
             const isActive = item.match.some(
               (m) => location.pathname === m || location.pathname.startsWith(m + "/")
@@ -80,14 +88,17 @@ const AppLayout = () => {
             return (
               <Link key={item.to} to={item.to} className="flex-1">
                 <div
-                  className={`flex flex-col items-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 transition-all duration-200 ${
-                    isActive ? "text-primary scale-105" : "text-muted-foreground hover:text-foreground"
+                  className={`flex flex-col items-center gap-1 py-2 transition-all duration-300 relative ${
+                    isActive ? "text-white" : "text-slate-500 hover:text-slate-300"
                   }`}
                 >
-                  <div className={`p-1 sm:p-1.5 rounded-xl transition-colors ${isActive ? "bg-primary/10" : ""}`}>
-                    <item.icon className={`h-5 w-5 ${isActive ? "stroke-[2.5]" : ""}`} />
-                  </div>
-                  <span className={`text-[10px] sm:text-[11px] ${isActive ? "font-bold" : "font-medium"}`}>
+                  {isActive && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="w-12 h-12 bg-primary/20 rounded-2xl blur-xl" />
+                    </div>
+                  )}
+                  <item.icon className={`h-5 w-5 sm:h-6 sm:w-6 transition-all duration-300 ${isActive ? "scale-110" : ""}`} />
+                  <span className={`text-[10px] font-black uppercase tracking-tighter ${isActive ? "opacity-100" : "opacity-60"}`}>
                     {item.label}
                   </span>
                 </div>

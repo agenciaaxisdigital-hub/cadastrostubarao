@@ -13,11 +13,11 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { toast } from "sonner";
 import { UserPlus, Shield, Trash2, KeyRound, Edit, Eye, Users } from "lucide-react";
 
-const CARGO_OPTIONS = ["admin", "lideranca", "usuario"];
+const CARGO_OPTIONS = ["diretor", "jogador", "comissao_tecnica"];
 const CARGO_LABEL: Record<string, string> = {
-  admin: "Administrador",
-  lideranca: "Liderança",
-  usuario: "Usuário",
+  diretor: "Diretor",
+  jogador: "Jogador",
+  comissao_tecnica: "Comissão Técnica",
 };
 
 const formatDate = (d: string | null) => {
@@ -30,7 +30,7 @@ const Usuarios = () => {
   const navigate = useNavigate();
   const [nome, setNome] = useState("");
   const [senha, setSenha] = useState("");
-  const [cargo, setCargo] = useState("usuario");
+  const [cargo, setCargo] = useState("jogador");
   const [loading, setLoading] = useState(false);
 
   const [editUser, setEditUser] = useState<{ id: string; nome: string; cargo: string } | null>(null);
@@ -56,7 +56,7 @@ const Usuarios = () => {
   // Listagem de cadastros por usuário será reimplementada para Tubarão Social/Time
   const userAssociados: any[] = [];
 
-  if (user?.cargo !== "admin") return <Navigate to="/social" replace />;
+  if (user?.cargo !== "diretor") return <Navigate to="/social" replace />;
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,7 +92,7 @@ const Usuarios = () => {
       toast.success("Usuário criado!");
       setNome("");
       setSenha("");
-      setCargo("usuario");
+      setCargo("jogador");
       refetch();
     }
   };
@@ -203,7 +203,7 @@ const Usuarios = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {CARGO_OPTIONS.map((c) => (
-                      <SelectItem key={c} value={c}>{c}</SelectItem>
+                      <SelectItem key={c} value={c}>{CARGO_LABEL[c]}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -235,13 +235,7 @@ const Usuarios = () => {
               <div key={u.id} className="p-3 flex items-center justify-between gap-2">
                 <div className="min-w-0">
                   <p className="font-semibold text-sm text-foreground truncate">{u.nome}</p>
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold mt-1 ${
-                    u.cargo === "admin"
-                      ? "bg-primary/10 text-primary"
-                      : "bg-muted text-muted-foreground"
-                  }`}>
-                    {u.cargo}
-                  </span>
+                    {CARGO_LABEL[u.cargo] || u.cargo}
                 </div>
                 <div className="flex gap-0.5 shrink-0">
                   <Button variant="ghost" size="icon" onClick={() => setViewUser({ id: u.id, nome: u.nome })} className="rounded-xl h-8 w-8 hover:bg-primary/10 hover:text-primary" title="Ver cadastros">
@@ -282,9 +276,9 @@ const Usuarios = () => {
                     <td className="py-3 px-4 font-semibold text-sm">{u.nome}</td>
                     <td className="py-3 px-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                        u.cargo === "admin" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                        u.cargo === "diretor" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
                       }`}>
-                        {u.cargo}
+                        {CARGO_LABEL[u.cargo] || u.cargo}
                       </span>
                     </td>
                     <td className="py-3 px-4">
@@ -393,7 +387,7 @@ const Usuarios = () => {
               </SelectTrigger>
               <SelectContent>
                 {CARGO_OPTIONS.map((c) => (
-                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                  <SelectItem key={c} value={c}>{CARGO_LABEL[c]}</SelectItem>
                 ))}
               </SelectContent>
             </Select>

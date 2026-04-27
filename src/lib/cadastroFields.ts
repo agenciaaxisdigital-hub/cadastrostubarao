@@ -1,7 +1,10 @@
 // Campos compartilhados entre cadastro interno (admin/lideranca) e público.
 // Usado em src/components/CadastroForm.tsx e src/pages/PublicCadastro.tsx.
 
+export type CadastroTipo = "jogador" | "comissao_tecnica" | "torcida" | "familia";
+
 export interface CadastroFormData {
+  tipo: CadastroTipo | "";
   nome: string;
   cpf: string;
   telefone: string; // WhatsApp
@@ -16,6 +19,7 @@ export interface CadastroFormData {
 }
 
 export const defaultCadastroForm: CadastroFormData = {
+  tipo: "",
   nome: "",
   cpf: "",
   telefone: "",
@@ -59,6 +63,7 @@ export const upperLetters = (v: string, max = 2) =>
 
 export const validateCadastro = (form: CadastroFormData) => {
   const errs: Record<string, string> = {};
+  if (!form.tipo) errs.tipo = "Tipo de cadastro é obrigatório";
   if (!form.nome.trim()) errs.nome = "Nome é obrigatório";
   const cpfDigits = form.cpf.replace(/\D/g, "");
   if (!cpfDigits) errs.cpf = "CPF é obrigatório";
@@ -75,6 +80,7 @@ export const validateCadastro = (form: CadastroFormData) => {
 };
 
 export const buildPayload = (form: CadastroFormData) => ({
+  tipo: form.tipo || null,
   nome: form.nome.trim(),
   cpf: form.cpf.replace(/\D/g, "") || null,
   telefone: form.telefone.replace(/\D/g, "") || null,
@@ -87,3 +93,4 @@ export const buildPayload = (form: CadastroFormData) => ({
   colegio_eleitoral: form.colegio_eleitoral.trim() || null,
   observacoes: form.observacoes.trim() || null,
 });
+

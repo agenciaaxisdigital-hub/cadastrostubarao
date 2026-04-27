@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Heart, Trophy, User, Vote, AlertCircle, CheckCircle2, ExternalLink } from "lucide-react";
+import { Heart, Trophy, User, Vote, AlertCircle, CheckCircle2, ExternalLink, Users, Baby, Waves } from "lucide-react";
 import {
   CadastroFormData,
   defaultCadastroForm,
@@ -35,6 +35,7 @@ const PublicCadastro = ({ tipo }: Props) => {
   const Icon = meta.icon;
 
   const [liderNome, setLiderNome] = useState<string | null>(null);
+  const [liderCargo, setLiderCargo] = useState<string | null>(null);
   const [liderInvalido, setLiderInvalido] = useState(false);
   const [carregandoLider, setCarregandoLider] = useState(true);
 
@@ -57,6 +58,7 @@ const PublicCadastro = ({ tipo }: Props) => {
           setLiderInvalido(true);
         } else {
           setLiderNome(data[0].nome);
+          setLiderCargo(data[0].cargo);
         }
       }
     );
@@ -201,21 +203,76 @@ const PublicCadastro = ({ tipo }: Props) => {
     }`;
 
   return (
-    <div className="min-h-[100dvh] gradient-deep">
-      <header className="px-4 pt-8 pb-6 text-center">
-        <Link to="/" className="inline-block">
-          <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-            TUBARÃO CADASTROS
-          </h1>
-        </Link>
-        <p className="text-white/70 text-xs sm:text-sm mt-1">
-          {meta.label} · indicação de{" "}
-          <span className="font-semibold text-white">{liderNome}</span>
+    <div className="min-h-[100dvh] relative overflow-hidden bg-[#020817] font-sans">
+      {/* Premium Background Elements */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-[-5%] left-[-5%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[100px]" />
+        <div className="absolute bottom-[-5%] right-[-5%] w-[40%] h-[40%] bg-accent/10 rounded-full blur-[100px]" />
+        <div 
+          className="absolute inset-0 opacity-20 bg-cover bg-center mix-blend-overlay"
+          style={{ backgroundImage: 'url("/login_background.png")' }}
+        />
+      </div>
+
+      <header className="px-4 pt-12 pb-10 text-center relative z-10 animate-in fade-in slide-in-from-top-4 duration-700">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/20 mb-6 mx-auto">
+          <Waves className="h-7 w-7 text-white" />
+        </div>
+        <h1 className="text-3xl font-black text-white tracking-tighter uppercase sm:text-4xl mb-2">
+          Tubarão <span className="text-primary-glow">Cadastros</span>
+        </h1>
+        <p className="text-slate-400 text-[10px] font-black tracking-[0.3em] uppercase mb-6">
+          {meta.label}
         </p>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Indicação de</span>
+          <span className="text-xs font-black text-white uppercase tracking-tight">{liderNome}</span>
+        </div>
       </header>
 
-      <div className="px-4 pb-12">
-        <Card className="max-w-lg mx-auto shadow-elevated border-0 overflow-hidden mb-4">
+      <div className="px-4 pb-12 relative z-10">
+        {/* Seleção de Tipo */}
+        <div className="max-w-lg mx-auto mb-10 animate-in fade-in zoom-in duration-700 delay-200">
+          <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] text-center mb-4">
+            Selecione seu perfil
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {[
+              { id: "jogador", label: "Jogador", icon: Trophy, roles: ["diretor"] },
+              { id: "comissao_tecnica", label: "Comissão", icon: Users, roles: ["diretor"] },
+              { id: "familia", label: "Família", icon: Baby, roles: ["diretor", "jogador", "comissao_tecnica"] },
+              { id: "torcida", label: "Torcida", icon: Heart, roles: ["diretor", "jogador", "comissao_tecnica"] },
+            ]
+              .filter((t) => !liderCargo || t.roles.includes(liderCargo))
+              .map((t) => {
+                const Icon = t.icon;
+                const active = form.tipo === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => set("tipo", t.id)}
+                    className={`flex flex-col items-center justify-center p-3 rounded-2xl border-2 transition-all ${
+                      active
+                        ? "border-white bg-white/20 text-white shadow-lg scale-[1.05]"
+                        : "border-white/10 bg-white/5 text-white/50 hover:border-white/30"
+                    }`}
+                  >
+                    <Icon className={`h-5 w-5 mb-1.5 ${active ? "text-white" : "text-white/40"}`} />
+                    <span className="text-[10px] font-black uppercase tracking-tight">{t.label}</span>
+                  </button>
+                );
+              })}
+          </div>
+          {submitted && errors.tipo && (
+            <p className="text-rose-400 text-[10px] font-bold text-center mt-2 flex items-center justify-center gap-1">
+              <AlertCircle className="h-3 w-3" /> Selecione uma opção acima
+            </p>
+          )}
+        </div>
+
+        <div className={`${!form.tipo ? "opacity-30 pointer-events-none grayscale" : "transition-all duration-300"}`}>
+          <Card className="max-w-lg mx-auto shadow-elevated border-0 overflow-hidden mb-4">
           <CardHeader className="pb-3 px-4 sm:px-6">
             <CardTitle className="flex items-center gap-2.5 text-base">
               <div className="h-9 w-9 rounded-lg gradient-primary flex items-center justify-center shrink-0">
@@ -359,6 +416,7 @@ const PublicCadastro = ({ tipo }: Props) => {
             </form>
           </CardContent>
         </Card>
+        </div>
 
         <p className="text-center text-white/40 text-[10px] mt-4">
           Tubarão Cadastros · Sistema de Gestão

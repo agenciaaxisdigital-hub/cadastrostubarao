@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { ArrowLeft, User, AlertCircle, Vote, ExternalLink } from "lucide-react";
+import { ArrowLeft, User, AlertCircle, Vote, ExternalLink, Users, Heart, Trophy, Baby } from "lucide-react";
 import {
   CadastroFormData,
   defaultCadastroForm,
@@ -50,6 +50,7 @@ const CadastroForm = ({ table, title, basePath }: Props) => {
           }
           if (data) {
             setForm({
+              tipo: (data.tipo as any) || "",
               nome: data.nome || "",
               cpf: data.cpf ? maskCPF(data.cpf) : "",
               telefone: data.telefone ? maskPhone(data.telefone) : "",
@@ -132,12 +133,44 @@ const CadastroForm = ({ table, title, basePath }: Props) => {
           {isNew ? `Novo Cadastro - ${title}` : `Editar - ${title}`}
         </h1>
         <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-          Preencha os dados abaixo
+          {form.tipo ? "Preencha os dados abaixo" : "Selecione o tipo de cadastro para começar"}
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-        {/* Dados pessoais */}
+        {/* Seleção de Tipo */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {[
+            { id: "jogador", label: "Jogador", icon: Trophy, roles: ["diretor"] },
+            { id: "comissao_tecnica", label: "Comissão", icon: Users, roles: ["diretor"] },
+            { id: "familia", label: "Família", icon: Baby, roles: ["diretor", "jogador", "comissao_tecnica"] },
+            { id: "torcida", label: "Torcida", icon: Heart, roles: ["diretor", "jogador", "comissao_tecnica"] },
+          ]
+            .filter((t) => t.roles.includes(user?.cargo || ""))
+            .map((t) => {
+              const Icon = t.icon;
+              const active = form.tipo === t.id;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => set("tipo", t.id)}
+                  className={`flex flex-col items-center justify-center p-3 rounded-2xl border-2 transition-all ${
+                    active
+                      ? "border-primary bg-primary/5 text-primary shadow-sm scale-[1.02]"
+                      : "border-muted bg-card text-muted-foreground hover:border-primary/30"
+                  }`}
+                >
+                  <Icon className={`h-5 w-5 mb-1.5 ${active ? "text-primary" : "text-muted-foreground"}`} />
+                  <span className="text-[10px] font-black uppercase tracking-tight">{t.label}</span>
+                </button>
+              );
+            })}
+        </div>
+        <FieldError field="tipo" />
+
+        <div className={`${!form.tipo ? "opacity-30 pointer-events-none grayscale" : "transition-all duration-300"}`}>
+          {/* Dados pessoais */}
         <Card className="shadow-card border-0 overflow-hidden">
           <CardHeader className="pb-3 sm:pb-4 px-4 sm:px-6">
             <CardTitle className="flex items-center gap-2.5 text-sm sm:text-base">
@@ -287,8 +320,9 @@ const CadastroForm = ({ table, title, basePath }: Props) => {
             </div>
           </CardContent>
         </Card>
+      </div>
 
-        <div className="flex justify-end gap-2 pb-4">
+      <div className="flex justify-end gap-2 pb-4">
           <Button
             type="button"
             variant="outline"

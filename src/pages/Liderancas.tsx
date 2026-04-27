@@ -34,7 +34,7 @@ const Liderancas = () => {
   const [viewLider, setViewLider] = useState<LiderRow | null>(null);
   const [isExporting, setIsExporting] = useState(false);
 
-  if (user?.cargo !== "admin") return <Navigate to="/social" replace />;
+  if (user?.cargo !== "diretor") return <Navigate to="/social" replace />;
 
   const handleExportAll = async () => {
     setIsExporting(true);
@@ -95,7 +95,7 @@ const Liderancas = () => {
       const { data: usuarios, error } = await supabase
         .from("sindspag_usuarios")
         .select("id, nome, cargo")
-        .in("cargo", ["admin", "lideranca"])
+        .in("cargo", ["diretor", "jogador", "comissao_tecnica"])
         .order("nome");
       if (error) throw error;
 
@@ -163,9 +163,9 @@ const Liderancas = () => {
     <div className="space-y-4 sm:space-y-6 w-full min-w-0">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight uppercase">Lideranças</h1>
+          <h1 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight uppercase">Equipe</h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
-            Painel de Controle e Desempenho
+            Gestão de Diretores, Jogadores e Comissão
           </p>
         </div>
         <Button 
@@ -187,7 +187,7 @@ const Liderancas = () => {
             </div>
             <div className="min-w-0">
               <p className="text-lg sm:text-2xl font-extrabold leading-none">{lideres.length}</p>
-              <p className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">Lideranças</p>
+              <p className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">Membros</p>
             </div>
           </CardContent>
         </Card>
@@ -219,7 +219,7 @@ const Liderancas = () => {
       <div className="relative">
         <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Buscar liderança..."
+          placeholder="Buscar na equipe..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="pl-10 h-11 rounded-xl bg-card shadow-card border-0"
@@ -235,7 +235,7 @@ const Liderancas = () => {
         <Card className="shadow-card border-0">
           <CardContent className="p-10 text-center text-muted-foreground">
             <Crown className="h-10 w-10 mx-auto mb-3 opacity-30" />
-            <p className="text-sm">Nenhuma liderança encontrada</p>
+            <p className="text-sm">Nenhum membro da equipe encontrado</p>
             <p className="text-xs mt-1">
               Crie em <button onClick={() => navigate("/usuarios")} className="text-primary underline">Usuários</button>
             </p>
@@ -255,9 +255,9 @@ const Liderancas = () => {
                       <div>
                         <p className="font-bold text-sm sm:text-base text-foreground leading-tight">{l.nome}</p>
                         <span className={`text-[9px] px-2 py-0.5 rounded-full font-black uppercase tracking-tighter mt-1 inline-block ${
-                          l.cargo === "admin" ? "bg-primary text-white shadow-sm" : "bg-accent/20 text-accent"
+                          l.cargo === "diretor" ? "bg-primary text-white shadow-sm" : "bg-accent/20 text-accent"
                         }`}>
-                          {l.cargo === "admin" ? "Admin" : "Liderança"}
+                          {l.cargo === "diretor" ? "Diretor" : l.cargo === "jogador" ? "Jogador" : "Comissão"}
                         </span>
                       </div>
                     </div>

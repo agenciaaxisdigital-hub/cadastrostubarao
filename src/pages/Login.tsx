@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Lock, User, MessageCircle } from "lucide-react";
-
+import { Lock, User, MessageCircle, Waves } from "lucide-react";
 
 const STORAGE_KEY = "sindspag_remember";
 
@@ -54,9 +53,7 @@ const Login = () => {
     try {
       const result = await login(trimmedNome, trimmedSenha);
       if (result.success) {
-        // Use both navigate and fallback to ensure redirect always works
         navigate("/social", { replace: true });
-        // Fallback: if navigate didn't trigger re-render, force it
         setTimeout(() => {
           if (window.location.pathname === "/") {
             window.location.href = "/social";
@@ -73,99 +70,136 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center gradient-deep p-4 relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-48 sm:w-72 h-48 sm:h-72 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-white/5 rounded-full translate-x-1/3 translate-y-1/3" />
+    <div className="min-h-screen min-h-[100dvh] flex flex-col items-center justify-center relative overflow-hidden bg-[#020817]">
+      {/* Premium Background Elements */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/10 rounded-full blur-[150px] animate-pulse" />
+        <div 
+          className="absolute inset-0 opacity-40 bg-cover bg-center mix-blend-overlay"
+          style={{ backgroundImage: 'url("/login_background.png")' }}
+        />
+      </div>
 
-      <div className="w-full max-w-sm sm:max-w-md relative z-10">
-        <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">TUBARÃO CADASTROS</h1>
-          <p className="text-white/70 text-xs sm:text-sm mt-1.5">Sistema de Gestão</p>
+      <div className="w-full max-w-md px-4 relative z-10 animate-in fade-in zoom-in duration-500">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/30 mb-4">
+            <Waves className="h-8 w-8 text-white" />
+          </div>
+          <h1 className="text-3xl font-black text-white tracking-tighter uppercase sm:text-4xl">
+            Tubarão <span className="text-primary-glow">Cadastros</span>
+          </h1>
+          <p className="text-slate-400 text-sm font-medium mt-2 tracking-wide">
+            INTELIGÊNCIA EM GESTÃO DE DADOS
+          </p>
         </div>
 
-        <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-8">
-          <h2 className="text-lg sm:text-xl font-semibold text-foreground text-center mb-5 sm:mb-6">Acessar o sistema</h2>
+        <div className="bg-slate-900/40 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl p-8 sm:p-10">
+          <div className="mb-8">
+            <h2 className="text-xl font-bold text-white tracking-tight">Bem-vindo de volta</h2>
+            <p className="text-slate-400 text-sm mt-1">Acesse sua conta para continuar</p>
+          </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-            <div className="space-y-1.5">
-              <Label htmlFor="nome" className="text-sm font-medium text-foreground">Usuário</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="nome" className="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">Usuário</Label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-primary">
+                  <User className="h-5 w-5 text-slate-500 transition-colors group-focus-within:text-primary" />
+                </div>
                 <Input
                   id="nome"
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
-                  placeholder="Nome de usuário"
+                  placeholder="Seu nome de usuário"
                   autoComplete="username"
-                  className="pl-10 h-11 sm:h-12 rounded-xl border-border/60 focus:border-primary focus:ring-primary/20"
+                  className="pl-12 h-14 bg-slate-800/50 border-slate-700 rounded-2xl text-white placeholder:text-slate-600 focus:border-primary focus:ring-primary/20 transition-all"
                 />
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="senha" className="text-sm font-medium text-foreground">Senha</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <div className="space-y-2">
+              <Label htmlFor="senha" className="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">Senha</Label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-slate-500 transition-colors group-focus-within:text-primary" />
+                </div>
                 <Input
                   id="senha"
                   type="password"
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
-                  placeholder="Sua senha"
+                  placeholder="••••••••"
                   autoComplete="current-password"
-                  className="pl-10 h-11 sm:h-12 rounded-xl border-border/60 focus:border-primary focus:ring-primary/20"
+                  className="pl-12 h-14 bg-slate-800/50 border-slate-700 rounded-2xl text-white placeholder:text-slate-600 focus:border-primary focus:ring-primary/20 transition-all"
                 />
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="lembrar"
-                checked={lembrar}
-                onCheckedChange={(checked) => setLembrar(checked === true)}
-              />
-              <Label htmlFor="lembrar" className="text-xs sm:text-sm text-muted-foreground cursor-pointer select-none">
-                Lembrar meu usuário
-              </Label>
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  id="lembrar"
+                  checked={lembrar}
+                  onCheckedChange={(checked) => setLembrar(checked === true)}
+                  className="border-slate-700 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                />
+                <Label htmlFor="lembrar" className="text-sm text-slate-400 cursor-pointer select-none font-medium">
+                  Manter conectado
+                </Label>
+              </div>
             </div>
 
             {error && (
-              <div className="bg-destructive/10 text-destructive text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border border-destructive/20 text-center">
+              <div className="bg-rose-500/10 text-rose-400 text-xs font-bold px-4 py-3 rounded-2xl border border-rose-500/20 text-center animate-shake">
                 {error}
               </div>
             )}
 
             <Button
               type="submit"
-              className="w-full h-11 sm:h-12 rounded-xl text-sm sm:text-base font-semibold shadow-lg shadow-primary/30 hover:shadow-primary/40 transition-all duration-200"
+              className="w-full h-14 rounded-2xl text-base font-black uppercase tracking-widest gradient-primary shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
               disabled={loading}
             >
               {loading ? (
-                <span className="flex items-center gap-2">
-                  <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Entrando...
+                <span className="flex items-center gap-3">
+                  <span className="h-5 w-5 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+                  Autenticando...
                 </span>
               ) : (
-                "Entrar"
+                "Entrar no Sistema"
               )}
             </Button>
           </form>
         </div>
 
-        <a
-          href="https://wa.me/5562993885258?text=Oi%2C%20estou%20precisando%20de%20suporte%20com%20o%20Tubar%C3%A3o%20Cadastros"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 text-white/70 hover:text-white text-xs sm:text-sm mt-5 sm:mt-6 transition-colors"
-        >
-          <MessageCircle className="h-4 w-4" />
-          Fale com o suporte
-        </a>
+        <div className="mt-10 flex flex-col items-center gap-6">
+          <a
+            href="https://wa.me/5562993885258?text=Oi%2C%20preciso%20de%20suporte%20no%20Tubar%C3%A3o%20Cadastros"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 text-xs sm:text-sm font-bold transition-all"
+          >
+            <MessageCircle className="h-4 w-4" />
+            Central de Suporte
+          </a>
 
-        <p className="text-white/40 text-[10px] sm:text-xs text-center mt-3 px-4">
-          Tubarão Cadastros · Sistema de Gestão
-        </p>
+          <p className="text-slate-600 text-[10px] font-black uppercase tracking-[0.3em] text-center">
+            Tubarão Cadastros · Intelligence Hub
+          </p>
+        </div>
       </div>
+
+      <style>{`
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-4px); }
+          75% { transform: translateX(4px); }
+        }
+        .animate-shake {
+          animation: shake 0.2s ease-in-out 0s 2;
+        }
+      `}</style>
     </div>
   );
 };
