@@ -51,17 +51,20 @@ const PublicCadastro = ({ tipo }: Props) => {
       setCarregandoLider(false);
       return;
     }
-    (supabase.rpc as any)("tubarao_info_lider", { p_user_id: liderId }).then(
-      ({ data, error }: any) => {
+    supabase
+      .from("sindspag_usuarios")
+      .select("nome, cargo")
+      .eq("id", liderId)
+      .single()
+      .then(({ data, error }) => {
         setCarregandoLider(false);
-        if (error || !data || data.length === 0) {
+        if (error || !data) {
           setLiderInvalido(true);
         } else {
-          setLiderNome(data[0].v_nome);
-          setLiderCargo(data[0].v_cargo);
+          setLiderNome(data.nome);
+          setLiderCargo(data.cargo);
         }
-      }
-    );
+      });
   }, [liderId]);
 
   const set = (key: keyof CadastroFormData, value: string) => {
