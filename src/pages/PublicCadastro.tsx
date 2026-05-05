@@ -290,6 +290,14 @@ const PublicCadastro = ({ tipo }: Props) => {
                 className={inputCls("cpf")}
               />
             </Field>
+            <Field label="Data de Nascimento">
+              <Input
+                type="date"
+                value={form.data_nascimento}
+                onChange={(e) => set("data_nascimento", e.target.value)}
+                className={inputCls("data_nascimento")}
+              />
+            </Field>
             <Field label="WhatsApp *" error={submitted ? errors.telefone : undefined}>
               <Input
                 value={form.telefone}

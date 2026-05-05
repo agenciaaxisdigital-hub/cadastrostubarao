@@ -53,6 +53,7 @@ const CadastroForm = ({ table, title, basePath }: Props) => {
               tipo: (data.tipo as any) || "",
               nome: data.nome || "",
               cpf: data.cpf ? maskCPF(data.cpf) : "",
+              data_nascimento: data.data_nascimento || "",
               telefone: data.telefone ? maskPhone(data.telefone) : "",
               instagram: data.instagram || "",
               titulo_eleitor: data.titulo_eleitor || "",
@@ -202,6 +203,16 @@ const CadastroForm = ({ table, title, basePath }: Props) => {
                 className={inputCls("cpf")}
               />
               <FieldError field="cpf" />
+            </div>
+            <div>
+              <Label className={labelCls}>Data de Nascimento</Label>
+              <Input
+                type="date"
+                value={form.data_nascimento}
+                onChange={(e) => set("data_nascimento", e.target.value)}
+                className={inputCls("data_nascimento")}
+              />
+              <FieldError field="data_nascimento" />
             </div>
             <div>
               <Label className={labelCls}>WhatsApp *</Label>

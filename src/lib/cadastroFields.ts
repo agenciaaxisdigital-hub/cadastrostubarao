@@ -7,6 +7,7 @@ export interface CadastroFormData {
   tipo: CadastroTipo | "";
   nome: string;
   cpf: string;
+  data_nascimento: string;
   telefone: string; // WhatsApp
   instagram: string;
   titulo_eleitor: string;
@@ -22,6 +23,7 @@ export const defaultCadastroForm: CadastroFormData = {
   tipo: "",
   nome: "",
   cpf: "",
+  data_nascimento: "",
   telefone: "",
   instagram: "",
   titulo_eleitor: "",
@@ -83,6 +85,7 @@ export const buildPayload = (form: CadastroFormData) => ({
   tipo: form.tipo || null,
   nome: form.nome.trim(),
   cpf: form.cpf.replace(/\D/g, "") || null,
+  data_nascimento: form.data_nascimento || null,
   telefone: form.telefone.replace(/\D/g, "") || null,
   instagram: form.instagram.trim() || null,
   titulo_eleitor: form.titulo_eleitor.replace(/\D/g, "") || null,
